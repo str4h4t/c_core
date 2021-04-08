@@ -1,0 +1,80 @@
+import pickle
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+import numpy as np
+
+def crosscorr(datax, datay, meth, lag=0, wrap = False):
+    if wrap:
+        shiftedy = datay.shift(lag)
+        shiftedy.iloc[:lag] = datay.iloc[-lag:].values
+        return datax.corr(shiftedy)
+    else:
+        return datax.corr(datay.shift(lag), method = meth)
+
+
+sns.set_context('talk',font_scale=.8)
+with open('time_series_data.pkl', 'rb') as f:
+    data = pickle.load(f)
+with open('vodafone_updated_data_filtered.pkl', 'rb') as f:
+    data2 = pickle.load(f)
+keys = list(data.keys())
+result = pd.DataFrame(columns=['series_1', 'series_2', 'pearson','spearman', 'kendall'])
+ctr = 0
+for i in range(0,len(data)):
+    if (i != (len(data)-1)):
+        t_1 = pd.Series(data[keys[i]])
+        for j in range(i+1,len(data)):
+            ctr += 1
+            print(ctr)
+            print("i = "+str(i)+" j = "+str(j))
+            t_2 = pd.Series(data[keys[j]])
+            f, bx = plt.subplots(figsize=(14, 3))
+            bx.plot(t_1, color='g')
+            bx.plot(t_2, color='b')
+            bx.set_xticklabels([int(item - 10) for item in bx.get_xticks()])
+            plt.legend()
+            fig_name = keys[i]+"---"+keys[j]+"_dat.png"
+            fig_name = fig_name.replace(":","-")
+            plt.savefig(fig_name)
+            plt.clf()
+            t_1.truncate(before=0, after=(min(len(t_1), len(t_2)) - 1))
+            t_2.truncate(before=0, after=(min(len(t_1), len(t_2)) - 1))
+            rs_pearson = [crosscorr(t_1, t_2, 'pearson', lag) for lag in
+                          range(-5,5)]
+            rs_spearman = [crosscorr(t_1, t_2, 'spearman', lag) for lag in
+                           range(-5,5)]
+            rs_kendall = [crosscorr(t_1, t_2, 'kendall', lag) for lag in
+                          range(-5,5)]
+            #
+            rs_pearson = list(np.nan_to_num(rs_pearson))
+            rs_spearman = list(np.nan_to_num(rs_spearman))
+            rs_kendall = list(np.nan_to_num(rs_kendall))
+
+            result = result.append({'series_1': keys[i], 'series_2': keys[j],
+                                    'pearson': max(max(rs_pearson),abs(min(rs_pearson))),
+                                    'spearman': max(max(rs_spearman),abs(min(rs_spearman))),
+                                    'kendall': max(max(rs_kendall),abs(min(rs_kendall))),}, ignore_index = True)
+            offset_pearson = np.ceil(len(rs_pearson) / 2) - np.argmax(rs_pearson)
+            offset_spearman = np.ceil(len(rs_spearman) / 2) - np.argmax(rs_spearman)
+            offset_kendall = np.ceil(len(rs_kendall) / 2) - np.argmax(rs_kendall)
+            f, ax = plt.subplots(figsize=(14, 3))
+            ax.plot(rs_pearson, color='g')
+            ax.plot(rs_spearman, color='b')
+            ax.plot(rs_kendall, color='m')
+            ax.axvline(np.ceil(len(rs_pearson) / 2), color='k', linestyle='--', label='Center')
+            ax.axvline(np.argmax(rs_pearson), color='r', linestyle='--', label='Peak synchrony pearson')
+            ax.axvline(np.argmax(rs_spearman), color='c', linestyle='--', label='Peak synchrony spearman')
+            ax.axvline(np.argmax(rs_kendall), color='y', linestyle='--', label='Peak synchrony kendall')
+            ax.set(title=f'Offset Pearson= {offset_pearson} frames\n Offset Spearman = {offset_spearman} frames\n'
+            f'Offset Kendall = {offset_kendall} frames', ylim=[-1, 1], xlim=[0, 10], xlabel='Offset',
+                    ylabel='correlation')
+            ax.set_xticklabels([int(item - 10) for item in ax.get_xticks()]);
+            plt.legend()
+            fig_name = keys[i]+"---"+keys[j]+"_cor.png"
+            fig_name = fig_name.replace(":", "-")
+            plt.savefig(fig_name)
+            plt.clf()
+result.to_csv('result.csv')
+
+print("done")

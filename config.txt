@@ -1,0 +1,5 @@
+input_file_name: "/home/k_mathin/PycharmProjects/Ciena/Data/vodafone_data_oct30_cross_osid_mar_19_filtered_interpolated.pkl"
+model: "kshape"
+parameters: ""
+data_format: "z-score"
+boost = "1"
