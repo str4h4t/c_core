@@ -43,6 +43,7 @@ if __name__ == "__main__":
             result = a_cor.executor(member_details, curr_result, result, threshold, members, boost)
             #print(index)
         result = pd.DataFrame(result)
+        result = result.drop_duplicates(subset='pair_str', keep="first")
         track_accuracy = result['truth'].sum()/result.__len__()
         all_results['Pearson'].append({'threshold': threshold, 'correct_predictions': result['truth'].sum(),
                                        'total_predictions': result.__len__(), 'accuracy': track_accuracy})
@@ -56,6 +57,7 @@ if __name__ == "__main__":
             curr_result = corr2.execute()
             result = a_cor.executor(member_details, curr_result, result, threshold, members, boost)
         result = pd.DataFrame(result)
+        result = result.drop_duplicates(subset='pair_str', keep="first")
         track_accuracy = result['truth'].sum() / result.__len__()
         all_results['Spearman'].append({'threshold': threshold, 'correct_predictions': result['truth'].sum(),
                                        'total_predictions': result.__len__(), 'accuracy': track_accuracy})
@@ -69,6 +71,7 @@ if __name__ == "__main__":
             curr_result = corr2.execute()
             result = a_cor.executor(member_details, curr_result, result, threshold, members, boost)
         result = pd.DataFrame(result)
+        result = result.drop_duplicates(subset='pair_str', keep="first")
         track_accuracy = result['truth'].sum() / result.__len__()
         all_results['Kendall'].append({'threshold': threshold, 'correct_predictions': result['truth'].sum(),
                                        'total_predictions': result.__len__(), 'accuracy': track_accuracy})
@@ -85,6 +88,7 @@ if __name__ == "__main__":
         if not result:
             continue
         result = pd.DataFrame(result)
+        result = result.drop_duplicates(subset='pair_str', keep="first")
         track_accuracy = result['truth'].sum() / result.__len__()
         all_results['DCCA'].append({'threshold': threshold, 'correct_predictions': result['truth'].sum(),
                                        'total_predictions': result.__len__(), 'accuracy': track_accuracy})
@@ -128,6 +132,6 @@ if __name__ == "__main__":
     #     #print("Ending Procedure...")
     #     dist_threshold -= 0.01
     for key in all_results.keys():
-        pd.DataFrame(all_results[key]).to_csv(key + '_cross_osid_mar19_filtered_result.csv')
+        pd.DataFrame(all_results[key]).to_csv(key + '_cross_osid_mar19_filtered_raw_data_result.csv')
     # for key in dtw_all_results.keys():
     #     pd.DataFrame(dtw_all_results[key]).to_csv(key + 'not_pm_filtered_result.csv')

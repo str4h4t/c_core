@@ -43,7 +43,8 @@ def executor(details, result, out, threshold, members = None, boost = False):
                         if desc[ctr-1] > thres:
                             if root['track'] == neighbors_pred['track'][n]:
                                 truth = 1
-                            out.append( {'ind': n, 'root': root['node'], 'neighbor': neighbors_pred['node'][n], 'pair' : pair,
+                            pair.sort()
+                            out.append( {'ind': n, 'root': root['node'], 'neighbor': neighbors_pred['node'][n], 'pair' : pair, 'pair_str': pair[0] + pair[1],
                                          'p_root': root['track'], 'p_neighbor': neighbors_pred['track'][n], 'pm_root': root['pm'],
                                          'pm_neighbor': neighbors_pred['pm'][n],'truth': truth})
                         break

@@ -1,5 +1,5 @@
-input_file_name: "/home/k_mathin/PycharmProjects/Ciena/Data/vodafone_data_oct30_cross_osid_mar_19_filtered_interpolated.pkl"
+input_file_name: "C:\Users\kamal\PycharmProjects\c_core\Data\vodafone_data_oct30_cross_osid_mar_19_filtered_interpolated.pkl"
 model: "kshape"
 parameters: ""
-data_format: "z-score"
+data_format: "raw_data"
 boost = "1"

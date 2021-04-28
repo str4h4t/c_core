@@ -103,7 +103,7 @@ for track in track_dictionary.keys():
                 if (np.var(x['pmvalue']) > variance_threshold) & (x['pmvalue'].__len__() > seq_length_threshold):
                     min_length.append(x['ts'].count())
                     x = x.sort_values('ts')
-                    time_series_essential.append({"data": np.asarray(x['pmvalue']), "track": track, "node": node,
+                    time_series_essential.append({"data": np.asarray(x['pmvalue']), "track": track, "node": node.replace("-","_"),
                                                   "slot": x['slot'][0], "port": x['port'][0], "pm": x['pm'][0],
                                                   "timestamp": pd.to_datetime(x['ts'], unit='s').dt.date})
 

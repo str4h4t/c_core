@@ -133,11 +133,11 @@ def main():
                         help='random seed (default: 2050)')
     parser.add_argument('--prediction-steps', type=int, default=10,
                         help='prediction steps in data (default: 10)')
-    parser.add_argument('--dynamics-path', type=str, default='./saved/dynamics.pickle',
+    parser.add_argument('--dynamics-path', type=str, default='dynamics.pickle',
                         help='path to save dynamics learner (default: ./saved/dynamics.pickle)')
-    parser.add_argument('--gumbel-path', type=str, default='./saved/gumbel.pickle',
+    parser.add_argument('--gumbel-path', type=str, default='gumbel.pickle',
                         help='path to save gumbel generator (default: ./saved/gumbel.pickle)')
-    parser.add_argument('--data-path', type=str, default='./data/test.pickle',
+    parser.add_argument('--data-path', type=str, default='/data/test.pickle',
                         help='path to load data (default: ./data/test.pickle)')
 
     args = parser.parse_args()

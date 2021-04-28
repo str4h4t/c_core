@@ -227,7 +227,7 @@ def load_bn_ggn(batch_size = 128,dyn_type='table'):
     return train_data_loader,valid_data_loader,test_data_loader,edges
 
 def load_cml_ggn(batch_size = 128):
-    data_path = './data/cml/data_lambd3.6_coupl0.2_node10.pickle'
+    data_path = 'data/cml_data_lambd3.5_coupl0.2_node10.pickle'
     with open(data_path, 'rb') as f:
         object_matrix, train_data, val_data, test_data = pickle.load(f) # (samples, nodes, timesteps, 1)
     print('\nMatrix dimension: %s Train data size: %s Val data size: %s Test data size: %s'

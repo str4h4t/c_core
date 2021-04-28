@@ -3,7 +3,7 @@ import glob
 from tqdm import tqdm
 import pickle
 
-topo_files = glob.glob('results_anonymised_Oct_30//df_topo_*.csv')
+topo_files = glob.glob('topo_with_different_osids_updated//df_topo_*.csv')
 
 list_topo_files = []
 for file in tqdm(topo_files):
@@ -19,8 +19,7 @@ for file in tqdm(topo_files):
     df = pd.DataFrame({'node_1': df.min(axis=1), 'node_2': df.max(axis=1)}).drop_duplicates(ignore_index=True)
 
     list_topo_files.append(df)
-df = pd.concat(list_topo_files, ignore_index=True).drop_duplicates(ignore_index=True).sort_values(by='node_1',
-                                                                                                  ignore_index=True)
+df = pd.concat(list_topo_files, ignore_index=True).drop_duplicates(ignore_index=True).sort_values(by='node_1', ignore_index=True)
 # topo_nodes are all the nodes in the topo files
 # nh_nodes are the nodes from the interpolated filtered nh files
 topo_nodes = pd.concat([df.node_1, df.node_2], axis=0,ignore_index=True).drop_duplicates().to_numpy()
@@ -31,8 +30,9 @@ with open('vodafone_data_oct30_cross_osid_mar_19_filtered_interpolated.pkl', 'rb
     tsd = pickle.load(f)
 
 nh_nodes = tsd['node'].unique()
-
+df = pd.concat([df['node_1'].str.replace('-','_'),df['node_2'].str.replace('-','_')],axis =1)
 for row in df.iterrows():
     if (row[1]['node_1'] in nh_nodes) and (row[1]['node_2'] in nh_nodes):
         ctr += 1
+
 print(ctr)

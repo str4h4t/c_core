@@ -21,7 +21,7 @@ def executor(data, method, param, boost):
         window_size = param[0]
         correlation_matrix = np.zeros([data.shape[0],data.shape[0]])
         #np.fill_diagonal(correlation_matrix,99)
-        pool = mp.Pool(mp.cpu_count())
+        pool = mp.Pool(mp.cpu_count()-1)
         for i in range(0, data.shape[0]):
             #print(i)
             if (i != (data.shape[0] - 1)):
