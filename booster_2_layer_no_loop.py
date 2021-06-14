@@ -19,7 +19,6 @@ if __name__ == "__main__":
     data_format = config[3]
     if config[4] == "1":
         boost = True
-
     with open(ip_file, 'rb') as f:
         data_set = pickle.load(f)
     data = np.zeros(data_set[data_format][0].__len__())

@@ -21,11 +21,12 @@ data_format = config[3]
 if config[4] == "1":
     boost = True
 
-with open(ip_file, 'rb') as f:
+with open('pmvalues_interpolated_filtered_simpleindex.pkl', 'rb') as f:
     data_set = pickle.load(f)
-
-with open('spearman_complete_oct_30_z_score_corr_matrix.pkl', 'rb') as f:
-    c_mat = pickle.load(f)
+data_set = data_set.reset_index()
+data_set['node'] = data_set['node'].str.replace('-','_')
+#with open('spearman_complete_oct_30_z_score_corr_matrix.pkl', 'rb') as f:
+    #c_mat = pickle.load(f)
 
 topo_files = glob.glob('Data//topo_with_different_osids_updated//df_topo_*.csv')
 
@@ -45,7 +46,7 @@ for file in tqdm(topo_files):
     list_topo_files.append(df)
 df = pd.concat(list_topo_files, ignore_index=True).drop_duplicates(ignore_index=True).sort_values(by='node_1', ignore_index=True)
 topo_pairs = pd.concat([df['node_1'].str.replace('-','_'),df['node_2'].str.replace('-','_')],axis =1)
-adj_gt = np.zeros([c_mat.shape[0],c_mat.shape[1]])
+adj_gt = np.zeros([data_set.__len__(),data_set.__len__()])
 for i in data_set.index:
     neighbors = topo_pairs[topo_pairs['node_1'].str.contains(data_set['node'][i]) | topo_pairs['node_2'].str.contains(data_set['node'][i])]
     neighbors = pd.unique(neighbors.values.ravel())
@@ -53,5 +54,5 @@ for i in data_set.index:
     for n in neighbors:
         ind = data_set[data_set['node'] == n].index
         adj_gt[i, ind] = 1
-np.save('adj_gt_cross_osids_vodafone.npy')
+np.save('adj_gt_cross_osids_vodafone_ahmed.npy', adj_gt)
 print("hello")
