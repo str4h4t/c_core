@@ -7,7 +7,7 @@ import glob
 from tqdm import tqdm
 import sys
 
-topo_files = glob.glob('topo_with_different_osids_updated//df_topo_*.csv')
+topo_files = glob.glob('sx//results_anonymised//df_topo_*.csv')
 
 list_topo_files = []
 for file in tqdm(topo_files):
@@ -77,7 +77,7 @@ for key, values in path_dictionary.items():
     for e in values:
         assign_path_dict[e] = key
 
-pmvalues = pd.read_pickle('interpolated_data/pmvalues_interpolated.pkl').transpose()
+pmvalues = pd.read_pickle('pmvalues.pkl').transpose()
 info = pmvalues.index.to_series().str.split('_', expand=True)
 df = pd.concat([pd.DataFrame({'node': info[0]+'_'+info[1]+'_'+info[2], 'port': info[3], 'fac_pm': info[4]+'_'+info[5]}), pmvalues], axis=1)
 df = df[df.node.isin(list(topo_nodes))]
@@ -91,7 +91,7 @@ df = pd.concat([pd.DataFrame({'node': info[0]+'_'+info[1]+'_'+info[2], 'port': i
 df = df[df.node.isin(topo_nodes)]
 df.insert(0, 'group', df.node.apply(lambda x: assign_path_dict[x]))
 df = df.groupby(['group', 'node', 'port', 'fac_pm']).apply(lambda x: np.array(x)[0][4:])
-df.to_pickle('./interpolated_filtered_data/pmvalues_interpolated_filtered_multiindex.pkl')
+df.to_pickle('./interpolated_filtered_data/pmvalues_interpolated_filtered_multiindex_sx.pkl')
 
 
 # riskvalues = pd.read_pickle('interpolated_data/riskvalues_interpolated.pkl').transpose()

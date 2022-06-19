@@ -10,7 +10,7 @@ import numpy as np
 from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
-with open('vodafone_data_oct30_filtered_interpolated.pkl', 'rb') as f:
+with open('pmvalues_sx_interpolated_filtered.pkl', 'rb') as f:
     time_series_data = pickle.load(f)
 
 

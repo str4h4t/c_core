@@ -5,18 +5,20 @@ from tqdm import tqdm
 import pickle
 
 booster = True
-gt_mat = np.load('adj_gt_cross_osids_vodafone_ahmed.npy')
+gt_mat = np.load('adj_gt_cross_osids_vodafone_port_level_0921_OPOUT_OTS.npy')
 gt_mat = gt_mat.astype(int)
 param = ["pearson", "spearman", "kendall", "dcca"]
 
-with open('pmvalues_interpolated_filtered_simpleindex.pkl', 'rb') as f:
+with open('pmvalues_interpolated_filtered_port_lvl_0921.pkl', 'rb') as f:
     data_set = pickle.load(f)
+data_set = data_set.loc[data_set['pm'] == 'OPOUT-OTS']
 data_set = data_set.reset_index()
 data_set['node'] = data_set['node'].str.replace('-', '_')
 # with open('kendall_complete_oct_30_raw_data_corr_matrix.pkl', 'rb') as f:
 #      cor_mat = pickle.load(f)
 for p in param:
-    cor_mat = np.load('kshape_cor_matrix_cross_osids_vodafone_risk_a_'+ p +'.npy')
+    #cor_mat = np.load('kshape_cor_matrix_cross_osids_vodafone_test_netrd_wt.npy')
+    cor_mat = np.load('kshape_cor_matrix_cross_osids_port_level_0921_OPOUT_OTS_vodafone_'+ p +'.npy')
     results = []
     for threshold in np.arange(0.75, 1, 0.01):
         c_mat = np.where(cor_mat > threshold, 1, 0)
@@ -56,5 +58,5 @@ for p in param:
             f1_score = 2*(precision*recall)/(precision+recall)
         results.append({'threshold': threshold, 'tp': tp, 'fp': fp,'fn': fn,'tn': tn,'accuracy':accuracy,
                         'precision': precision, 'recall': recall, 'f1_score': f1_score})
-    pd.DataFrame(results).to_csv(p + '_cross_osid_mar19_filtered_risk_kshape_a_result.csv')
+    pd.DataFrame(results).to_csv(p + '_kshape_port_level_raw_result__OPOUT_OTS_0921.csv')
 print("done")

@@ -41,6 +41,8 @@ def executor(details, result, out, threshold, members = None, boost = False):
                         continue
                     elif found == 0:
                         if desc[ctr-1] > thres:
+                            print(root['track']+'_'+neighbors_pred['track'][n])
+                            #print(neighbors_pred['track'][n])
                             if root['track'] == neighbors_pred['track'][n]:
                                 truth = 1
                             pair.sort()

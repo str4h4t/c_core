@@ -7,6 +7,7 @@ import pickle
 booster = True
 gt_mat = np.load('adj_gt_cross_osids_vodafone_ahmed.npy')
 gt_mat = gt_mat.astype(int)
+np.fill_diagonal(gt_mat,0)
 param = ["pearson", "spearman", "kendall", "dcca"]
 
 with open('riskvalues_interpolated_filtered_simpleindex.pkl', 'rb') as f:

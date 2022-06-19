@@ -26,11 +26,11 @@ topo_nodes = pd.concat([df.node_1, df.node_2], axis=0,ignore_index=True).drop_du
 #nh_nodes = pd.read_pickle('pmvalues_interpolated_ahmed_mar_20.pkl').columns.to_series().str.split('_').apply(lambda x: x[0]+'_'+x[1]+'_'+x[2]).drop_duplicates().to_numpy()
 ctr = 0
 
-with open('vodafone_data_oct30_cross_osid_mar_19_filtered_interpolated.pkl', 'rb') as f:
+with open('pmvalues_interpolated_filtered_simpleindex.pkl', 'rb') as f:
     tsd = pickle.load(f)
-
 nh_nodes = tsd['node'].unique()
-df = pd.concat([df['node_1'].str.replace('-','_'),df['node_2'].str.replace('-','_')],axis =1)
+#nh_nodes = tsd['node'].str.replace('-','_').unique()
+#df = pd.concat([df['node_1'].str.replace('-','_'),df['node_2'].str.replace('-','_')],axis =1)
 for row in df.iterrows():
     if (row[1]['node_1'] in nh_nodes) and (row[1]['node_2'] in nh_nodes):
         ctr += 1

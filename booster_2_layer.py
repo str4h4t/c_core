@@ -132,6 +132,6 @@ if __name__ == "__main__":
     #     #print("Ending Procedure...")
     #     dist_threshold -= 0.01
     for key in all_results.keys():
-        pd.DataFrame(all_results[key]).to_csv(key + '_cross_osid_mar19_filtered_raw_data_result.csv')
+        pd.DataFrame(all_results[key]).to_csv(key + '_cross_osid_mar19_filtered_z_score_result.csv')
     # for key in dtw_all_results.keys():
     #     pd.DataFrame(dtw_all_results[key]).to_csv(key + 'not_pm_filtered_result.csv')

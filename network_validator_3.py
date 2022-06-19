@@ -1,0 +1,72 @@
+import os
+
+import numpy as np
+import pandas as pd
+import glob
+from tqdm import tqdm
+import pickle
+
+booster = True
+gt_mat = np.load('adj_gt_cross_osids_vodafone_ahmed.npy')
+gt_mat = gt_mat.astype(int)
+np.fill_diagonal(gt_mat,0)
+
+with open('pmvalues_interpolated_filtered_simpleindex.pkl', 'rb') as f:
+    data_set = pickle.load(f)
+data_set = data_set.reset_index()
+data_set['node'] = data_set['node'].str.replace('-', '_')
+# with open('kendall_complete_oct_30_raw_data_corr_matrix.pkl', 'rb') as f:
+#      cor_mat = pickle.load(f)
+cor_mat = np.zeros([data_set.__len__(),data_set.__len__()])
+dir = "C://Users//kamal//PycharmProjects//c_core//correlation_matrix//Vodafone"
+files = os.listdir(dir)
+ctr = 0
+for f in files:
+    ctr += 1
+    print(ctr)
+    cor_mat += np.load(dir + "//" + f)
+    cor_mat += abs(np.load('vodafon_netrd_granger_wt_not_normalized.npy'))
+    cor_mat = (cor_mat - cor_mat.min()) / (cor_mat.max() - cor_mat.min())
+    print(cor_mat.max())
+    results = []
+    for threshold in np.arange(0.75, 1, 0.01):
+        c_mat = np.where(cor_mat > threshold, 1, 0)
+        for n in data_set['node'].unique():
+            indices = data_set[data_set['node'] == n].index
+            if indices.__len__() > 1:
+                temp = c_mat[indices].sum(axis=0).reshape([1, cor_mat.shape[0]]).repeat(indices.__len__(), axis=0)
+                temp = np.where(temp > 0, 1, 0)
+                c_mat[indices] = temp
+        print(threshold)
+        tp = 0
+        tn = 0
+        fp = 0
+        fn = 0
+        for i in range(0,c_mat.__len__()):
+            #print(i)
+            for j in range(0,c_mat.__len__()):
+                if gt_mat[i][j] == 0:
+                    if c_mat[i][j] == 0:
+                        tn+=1
+                    if c_mat[i][j] == 1:
+                        fp+=1
+                if gt_mat[i][j] == 1:
+                    if c_mat[i][j] == 0:
+                        fn+=1
+                    if c_mat[i][j] == 1:
+                        tp+=1
+        accuracy = (tp + tn)/(tp+fp+fn+tn)
+        if tp+fp == 0:
+            precision = 0
+        else:
+            precision = tp/(tp+fp)
+        recall = tp/(tp+fn)
+        if precision + recall == 0:
+            f1_score = 0
+        else:
+            f1_score = 2*(precision*recall)/(precision+recall)
+        results.append({'threshold': threshold, 'tp': tp, 'fp': fp,'fn': fn,'tn': tn,'accuracy':accuracy,
+                        'precision': precision, 'recall': recall, 'f1_score': f1_score})
+    pd.DataFrame(results).to_csv(f.split(".")[0] + ".csv")
+    #pd.DataFrame(results).to_csv("t.csv")
+    print("done")

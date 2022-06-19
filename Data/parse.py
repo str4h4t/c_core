@@ -7,7 +7,7 @@ from tqdm import tqdm
 ## read the nh_files
 print('(step 1/7) reading files')
 
-nh_files = glob.glob('results_anonymised_Oct_30/df_nhresult*/*.csv')
+nh_files = glob.glob('sx/results_anonymised/df_nhresult*/*.csv')
 list_nh_files = []
 for file in tqdm(nh_files):
     df = pd.read_csv(file)

@@ -27,12 +27,14 @@ if __name__ == "__main__":
     if config[4] == "1":
         boost = True
 
-    with open('riskvalues_interpolated_filtered_simpleindex.pkl', 'rb') as f:
+    with open('pmvalues_interpolated_filtered_port_lvl_0921.pkl', 'rb') as f:
         data_set = pickle.load(f)
+    data_set = data_set.loc[data_set['pm'] == 'OPIN-OTS']
+    #data_set = data_set.transpose()
+    #data = np.asarray(data_set)
     data_set = data_set.reset_index()
-    data_set['node'] = data_set['node'].str.replace('-', '_')
-    data = np.asarray(data_set.iloc[:,5:])
-    data = z_norm(data)
+    data = np.asarray(data_set.iloc[:,4:])
+    #data = z_norm(data)
     #data = np.load("/home/k_mathin/PycharmProjects/Ciena/Data/vodafone_data_oct30_filtered_interpolated.pkl")
     # with open('100_clusters_newdata_notnormalized.pkl', 'rb') as f:
     #     assignments = pickle.load(f)
@@ -44,6 +46,7 @@ if __name__ == "__main__":
     result = []
 
     param = [["pearson",[4]], ["spearman",[4]], ["kendall",[4]], ["dcca", 6]]
+    #param = [["dcca", 6]]
     for p in param:
         adj_m_pred = np.zeros([data_set.shape[0], data_set.shape[0]])
         for index, row in assignments.iterrows():
@@ -59,7 +62,8 @@ if __name__ == "__main__":
             for ind in indices:
                 adj_m_pred[ind,indices] = curr_result[ctr]
                 ctr+=1
-        np.save('kshape_cor_matrix_cross_osids_vodafone_risk_a_' + p[0] + '.npy',adj_m_pred)
+        np.fill_diagonal(adj_m_pred, 0)
+        np.save('kshape_cor_matrix_cross_osids_port_level_0921_OPIN_OTS_vodafone_' + p[0] + '.npy',adj_m_pred)
 
     # track_accuracy = result['truth'].sum()/result.__len__()
     # all_results['Pearson'].append({'threshold': threshold, 'correct_predictions': result['truth'].sum(),

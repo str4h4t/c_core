@@ -37,7 +37,7 @@ class correlation_engine:
     def execute(self):
         if self.model_name == "kshape":
             return self.kshape()
-        if self.model_name == "pearson" or self.model_name == "spearman" or self.model_name == "kendall":
+        if self.model_name == "pearson" or self.model_name == "spearman" or self.model_name == "kendall" or self.model_name == "all":
             return self.basic_cor()
         if self.model_name == "dtw":
             return self.dtw()

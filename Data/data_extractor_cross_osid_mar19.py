@@ -13,8 +13,8 @@ prime_pms = ["OCH-OPR","OPR-OTS","OPIN-OTS","OPROSC-OTS","OCH-OPT","OPT-OTS","OP
 variance_threshold = 0.05
 seq_length_threshold = 55
 # nh_files = glob.glob('results_anonymised_updated//df_nhresult_vodafone_01-02_2020//part*.csv')
-topo_files = glob.glob('topo_with_different_osids_updated//df_topo_*.csv')
-nh_parent_files = glob.glob('results_anonymised_Oct_30//df_nhresult_vodafone*')
+topo_files = glob.glob('C://Users//kamal//PycharmProjects//c_core//Data//sx//results_anonymised//df_topo_sorted_Sep-2019_new.csv')
+nh_parent_files = glob.glob('C://Users//kamal//PycharmProjects//c_core//Data//sx//results_anonymised//df_nhresult_sx*')
 
 
 track_dictionary = {}
@@ -132,6 +132,6 @@ for i in range(0,tsd.__len__()):
          "port": tsd['port'][i], "pm": tsd['pm'][i], "raw_data": np.asarray(series[0]),
          "z-score": np.asarray(series['zscore']), "timestamp": np.asarray(series.index)})
     print(i)
-f = open("vodafone_data_oct30_cross_osid_mar_19_filtered_interpolated.pkl","wb")
+f = open("SX_data_cross_osid_mar_19_filtered_interpolated.pkl","wb")
 pickle.dump(pd.DataFrame(interpolated_time_series),f)
 f.close()
